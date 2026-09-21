@@ -3,15 +3,15 @@ class PrototypeAudio {
   private utterance?: SpeechSynthesisUtterance
   private voicesReady = false
   constructor() {
-    if ('speechSynthesis' in window) {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.getVoices()
       window.speechSynthesis.addEventListener('voiceschanged', () => { this.voicesReady = true })
     }
   }
-  stop() { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); this.utterance = undefined }
+  stop() { if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); this.utterance = undefined }
   speak(text: string, onError: () => void) {
     this.stop()
-    if (!('speechSynthesis' in window)) { onError(); return }
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) { onError(); return }
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = 'ru-RU'; utterance.rate = 0.8
     const voices = window.speechSynthesis.getVoices()
