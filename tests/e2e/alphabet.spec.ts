@@ -2,13 +2,33 @@ import { expect, test } from '@playwright/test'
 
 test('opens on the alphabet and exposes all 33 letters', async ({ page }) => {
   await page.goto('.')
-  await expect(page.locator('.letter-tile')).toHaveCount(33)
+  const tiles = page.locator('.letter-tile')
+  await expect(tiles).toHaveCount(33)
+  for (const tile of await tiles.all()) await expect(tile).toBeEnabled()
   await expect(page.getByRole('heading', { name: 'Выбери букву' })).toBeVisible()
+  await expect(page.locator('.intro')).toContainText('Все 33 буквы доступны.')
+  await expect(page.getByText('можно играть')).toHaveCount(0)
+})
+
+test('every letter opens a complete card', async ({ page }) => {
+  await page.goto('.')
+  const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+  for (const letter of alphabet) {
+    await page.getByRole('button', { name: new RegExp(`^Открыть букву ${letter}:`) }).click()
+    await expect(page.locator('.big-glyph')).toContainText(letter)
+    await expect(page.locator('.word-list button')).toHaveCount(3)
+    await expect(page.getByRole('button', { name: 'Слушать букву' })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Попробовать рукой/ })).toBeVisible()
+    const image = page.locator('.letter-illustration')
+    await expect(image).toBeVisible()
+    await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0), { message: `Image for ${letter} must load` }).toBeGreaterThan(0)
+    await page.getByRole('button', { name: '← Вся азбука' }).click()
+  }
 })
 
 test('letter card has three words and never reuses the horse image for A', async ({ page }) => {
   await page.goto('.')
-  await page.getByRole('button', { name: /^Аа автобус/ }).click()
+  await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
   await expect(page.locator('.word-list button')).toHaveCount(3)
   const image = page.locator('.letter-illustration')
   await expect(image).toBeVisible()
@@ -43,7 +63,7 @@ test('all 33 production image files load and decode', async ({ page }) => {
 
 test('writing screen accepts a pointer stroke and keeps controls available', async ({ page }) => {
   await page.goto('.')
-  await page.getByRole('button', { name: /^Мм мак/ }).click()
+  await page.getByRole('button', { name: /^Открыть букву М:/ }).click()
   await page.getByRole('button', { name: /Попробовать рукой/ }).click()
   const canvas = page.locator('canvas')
   const box = await canvas.boundingBox()
@@ -57,7 +77,7 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
 
 test('E lesson gives feedback and advances to the next word', async ({ page }) => {
   await page.goto('.')
-  await page.getByRole('button', { name: /^Ее ель/ }).click()
+  await page.getByRole('button', { name: /^Открыть букву Е:/ }).click()
   await expect(page.getByRole('heading', { name: 'Слышим Е в начале слова' })).toBeVisible()
   await page.getByRole('button', { name: 'И', exact: true }).click()
   await expect(page.getByRole('status')).toContainText('Послушай слово ещё раз')
@@ -75,7 +95,7 @@ test('audio buttons call the browser speech API with Russian text', async ({ pag
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: { getVoices: () => [{ lang: 'ru-RU' }], cancel: () => undefined, speak: (utterance: TestUtterance) => (window as unknown as { spoken: string[] }).spoken.push(utterance.text), addEventListener: () => undefined } })
   })
   await page.goto('.')
-  await page.getByRole('button', { name: /^Мм мак/ }).click()
+  await page.getByRole('button', { name: /^Открыть букву М:/ }).click()
   await page.locator('.word-list button').first().click()
   await expect.poll(() => page.evaluate(() => (window as unknown as { spoken: string[] }).spoken)).toContain('ма́к')
 })
