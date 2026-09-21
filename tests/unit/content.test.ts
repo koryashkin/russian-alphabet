@@ -21,8 +21,13 @@ describe('alphabet content contract', () => {
     expect(letters.find(letter => letter.uppercase === 'Ъ')?.kind).toBe('sign')
   })
 
-  it('has one object image for every letter', () => {
-    for (const letter of letters) expect(existsSync(resolve('public/assets/letters', `${letter.uppercase.codePointAt(0)?.toString(16)}.png`))).toBe(true)
+  it('has one object image for every example word', () => {
+    for (const letter of letters) {
+      for (const index of [0, 1, 2]) {
+        const filename = `${letter.uppercase.codePointAt(0)?.toString(16)}-${index}.webp`
+        expect(existsSync(resolve('public/assets/words', filename)), `${letter.uppercase}, word ${index + 1}`).toBe(true)
+      }
+    }
   })
 
   it('has a non-empty writing demonstration for every letter', () => {

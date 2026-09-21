@@ -26,14 +26,14 @@ test('every letter opens a complete card', async ({ page }) => {
   }
 })
 
-test('letter card has three words and never reuses the horse image for A', async ({ page }) => {
+test('letter card has three words and a production image', async ({ page }) => {
   await page.goto('.')
   await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
   await expect(page.locator('.word-list button')).toHaveCount(3)
   const image = page.locator('.letter-illustration')
   await expect(image).toBeVisible()
   const imageUrl = await image.getAttribute('src')
-  expect(imageUrl).toContain('/assets/letters/')
+  expect(imageUrl).toContain('/assets/words/410-0.webp')
   await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0)
   await expect.poll(() => image.evaluate(element => getComputedStyle(element).objectFit)).toBe('contain')
   await expect.poll(() => image.evaluate(element => getComputedStyle(element).objectPosition)).toBe('50% 50%')
@@ -42,23 +42,48 @@ test('letter card has three words and never reuses the horse image for A', async
   expect(imageBox?.height).toBeGreaterThanOrEqual(180)
   const response = await page.request.get(new URL(imageUrl!, page.url()).toString())
   expect(response.status()).toBe(200)
-  expect(response.headers()['content-type']).toBe('image/png')
+  expect(response.headers()['content-type']).toBe('image/webp')
   expect((await response.body()).byteLength).toBeGreaterThan(10_000)
 })
 
-test('all 33 production image files load and decode', async ({ page }) => {
+test('all 99 word image files load and decode', async ({ page }) => {
   await page.goto('.')
   const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
-  const base = new URL('assets/letters/', page.url())
+  const base = new URL('assets/words/', page.url())
   for (const letter of alphabet) {
-    const url = new URL(`${letter.codePointAt(0)!.toString(16)}.png`, base).toString()
-    const response = await page.request.get(url)
-    expect(response.status(), `${letter}: ${url}`).toBe(200)
-    expect(response.headers()['content-type'], letter).toBe('image/png')
-    expect((await response.body()).byteLength, letter).toBeGreaterThan(10_000)
-    const decoded = await page.evaluate(src => new Promise<boolean>(resolve => { const image = new Image(); image.onload = () => resolve(image.naturalWidth > 0 && image.naturalHeight > 0); image.onerror = () => resolve(false); image.src = src }), url)
-    expect(decoded, `${letter} must decode`).toBe(true)
+    for (const index of [0, 1, 2]) {
+      const label = `${letter}, word ${index + 1}`
+      const url = new URL(`${letter.codePointAt(0)!.toString(16)}-${index}.webp`, base).toString()
+      const response = await page.request.get(url)
+      expect(response.status(), `${label}: ${url}`).toBe(200)
+      expect(response.headers()['content-type'], label).toBe('image/webp')
+      expect((await response.body()).byteLength, label).toBeGreaterThan(3_000)
+      const decoded = await page.evaluate(src => new Promise<boolean>(resolve => { const image = new Image(); image.onload = () => resolve(image.naturalWidth > 0 && image.naturalHeight > 0); image.onerror = () => resolve(false); image.src = src }), url)
+      expect(decoded, `${label} must decode`).toBe(true)
+    }
   }
+})
+
+test('clicking each word changes the picture and selected state', async ({ page }) => {
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву Я:/ }).click()
+  const image = page.locator('.letter-illustration')
+  const buttons = page.locator('.word-list button')
+
+  await expect(image).toHaveAttribute('src', /42f-0\.webp$/)
+  await expect(image).toHaveAttribute('alt', 'Иллюстрация: я́блоко')
+  await expect(buttons.nth(0)).toHaveAttribute('aria-pressed', 'true')
+
+  await buttons.nth(1).click()
+  await expect(image).toHaveAttribute('src', /42f-1\.webp$/)
+  await expect(image).toHaveAttribute('alt', 'Иллюстрация: я́ма')
+  await expect(buttons.nth(1)).toHaveAttribute('aria-pressed', 'true')
+  await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0)
+
+  await buttons.nth(2).click()
+  await expect(image).toHaveAttribute('src', /42f-2\.webp$/)
+  await expect(image).toHaveAttribute('alt', 'Иллюстрация: мя́ч')
+  await expect(buttons.nth(2)).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('writing screen accepts a pointer stroke and keeps controls available', async ({ page }) => {
