@@ -1,29 +1,71 @@
-# Русская азбука для детей 4–6 лет
+# Russian Alphabet for Kids
 
-Семейное веб-приложение для изучения русского языка: все 33 буквы, озвучка, картинки, игры и письмо на iPad пальцем или Apple Pencil.
+An interactive Russian alphabet for children aged 4–6. This family pet project helps children learn all 33 letters quickly through short, friendly activities: listen to a letter, explore three familiar words, switch between hand-painted illustrations, and practise writing each letter stroke by stroke.
 
-## Документация
+**[Open the live app →](https://koryashkin.github.io/russian-alphabet/)**
 
-[Педагогическая программа и полный план реализации](docs/program-and-implementation-plan.md)
+![Russian alphabet home screen](docs/screenshots/alphabet-home.png)
 
-[MVP development plan: scope, tech stack, architecture, milestones and release checks](docs/mvp-development-plan.md)
+## What children can do
 
-[Asset generation guide and style contract](docs/asset-generation.md)
+- Open any of the 33 Russian letters from the alphabet screen.
+- Hear letters and words through the browser speech engine.
+- Explore three words and three matching illustrations for every letter — 99 images in total.
+- Watch the correct stroke order and draw with a finger or Apple Pencil.
+- Play a small listening game for the letter Е.
+- Use the app on a phone, tablet, or desktop without an account.
 
-В документе сохранены исследовательская основа, учебный маршрут из 18 блоков, матрица всех 33 букв, сценарии занятий, требования к картинкам и аудио, техническая архитектура, этапы разработки и ссылки на источники.
+![Letter card with three interactive words](docs/screenshots/letter-card.png)
 
-## Текущий статус
+<p align="center"><img src="docs/screenshots/writing-mobile.png" width="390" alt="Letter writing exercise on a phone"></p>
 
-- Исследование и программа подготовлены.
-- План реализации и производства материалов подготовлен.
-- Работает интерактивная азбука со всеми 33 буквами, письмом по шагам и браузерной озвучкой.
-- Для каждой буквы доступны три слова и три отдельные иллюстрации; нажатие на слово меняет картинку и произносит слово.
-- Это семейный pet project автора для занятий с собственным ребёнком; контент и изображения проверяются взрослыми перед релизом.
-- Статическая версия автоматически публикуется на GitHub Pages после push в `main`.
-- Следующий этап: педагогическая проверка слов, ударений, произношения и иллюстраций с ребёнком.
+## Why this project exists
 
-## Формат работы
+I built this project for my child and for other families who want a calm, visual introduction to the Russian alphabet. The interface keeps each activity short and clear so a child can make progress in a few minutes without navigating complicated menus. Adults should still review pronunciation, stress marks, and word meaning together with the child.
 
-Основной источник проекта — Markdown-файлы в этом репозитории. Изменения программы, решений и плана сохраняются здесь с историей Git. DOCX не используется как рабочий исходник.
+## Development and quality
 
-Исследовательские выводы и проектные предположения обозначены отдельно. Проверка источников в исходном плане: 20 сентября 2026 года.
+The app is a static React and TypeScript site built with Vite. Illustrations are stored as optimized WebP assets; letters and labels remain HTML so the generated artwork cannot introduce an incorrect glyph. GitHub Actions runs linting, content tests, a production build, and Playwright browser tests for desktop and mobile before deploying to GitHub Pages.
+
+```bash
+npm install
+npm run dev
+npm run test:all
+```
+
+Project documentation:
+
+- [Learning programme and implementation plan](docs/program-and-implementation-plan.md)
+- [MVP development plan and technical architecture](docs/mvp-development-plan.md)
+- [Illustration generation and style guide](docs/asset-generation.md)
+
+---
+
+# Русская азбука для детей
+
+Интерактивная русская азбука для детей 4–6 лет. Это семейный pet project, который помогает быстрее выучить все 33 буквы через короткие и понятные занятия: послушать букву, познакомиться с тремя словами, рассмотреть отдельные иллюстрации и потренироваться писать по шагам.
+
+**[Открыть приложение →](https://koryashkin.github.io/russian-alphabet/)**
+
+## Что умеет азбука
+
+- Все 33 буквы доступны с первого экрана.
+- Буквы и слова озвучиваются средствами браузера.
+- Для каждой буквы есть три слова и три подходящие картинки — всего 99 иллюстраций.
+- Написание показывается по штрихам; рисовать можно пальцем или Apple Pencil.
+- Для буквы Е есть небольшая игра на слух.
+- Приложение работает на телефоне, планшете и компьютере без регистрации.
+
+## Для чего создан проект
+
+Я сделал эту азбуку для своего ребёнка и для других семей, которым нужен спокойный и наглядный способ познакомиться с русскими буквами. Каждый экран посвящён одному простому действию, поэтому ребёнок может заниматься несколько минут без сложных меню. Произношение, ударения и значение слов лучше обсуждать вместе со взрослым.
+
+## Разработка и проверка
+
+Это статическое приложение на React, TypeScript и Vite. Иллюстрации оптимизированы в WebP, а буквы и подписи выводятся через HTML, чтобы генерация изображения не могла исказить букву. Перед публикацией GitHub Actions запускает линтер, проверку учебных данных, production-сборку и Playwright-тесты в мобильном и настольном режимах. После успешной проверки сайт автоматически публикуется на GitHub Pages.
+
+Документация проекта:
+
+- [Педагогическая программа и полный план реализации](docs/program-and-implementation-plan.md)
+- [План разработки MVP и техническая архитектура](docs/mvp-development-plan.md)
+- [Правила генерации и единый стиль иллюстраций](docs/asset-generation.md)

@@ -6,8 +6,25 @@ test('opens on the alphabet and exposes all 33 letters', async ({ page }) => {
   await expect(tiles).toHaveCount(33)
   for (const tile of await tiles.all()) await expect(tile).toBeEnabled()
   await expect(page.getByRole('heading', { name: 'Выбери букву' })).toBeVisible()
-  await expect(page.locator('.intro')).toContainText('Все 33 буквы доступны.')
+  await expect(page.getByRole('heading', { name: /Буквы, которые хочется/ })).toBeVisible()
+  await expect(page.locator('.header-count')).toHaveText('33 буквы · 99 картинок')
   await expect(page.getByText('можно играть')).toHaveCount(0)
+  await expect(page.getByText('прототип', { exact: true })).toHaveCount(0)
+  await expect(page.getByRole('contentinfo')).toHaveCount(0)
+})
+
+test('main screens do not overflow the viewport', async ({ page }) => {
+  await page.goto('.')
+  const hasHorizontalOverflow = () => page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
+  await expect.poll(hasHorizontalOverflow).toBe(false)
+
+  await page.getByRole('button', { name: /^Открыть букву Я:/ }).click()
+  await expect.poll(hasHorizontalOverflow).toBe(false)
+  await expect(page.locator('.lesson-number')).toHaveText('33')
+
+  await page.getByRole('button', { name: /Попробовать рукой/ }).click()
+  await expect.poll(hasHorizontalOverflow).toBe(false)
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
 })
 
 test('every letter opens a complete card', async ({ page }) => {
@@ -84,6 +101,17 @@ test('clicking each word changes the picture and selected state', async ({ page 
   await expect(image).toHaveAttribute('src', /42f-2\.webp$/)
   await expect(image).toHaveAttribute('alt', 'Иллюстрация: мя́ч')
   await expect(buttons.nth(2)).toHaveAttribute('aria-pressed', 'true')
+})
+
+test('opening another letter resets the selected word and picture', async ({ page }) => {
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву Я:/ }).click()
+  await page.locator('.word-list button').nth(2).click()
+  await expect(page.locator('.letter-illustration')).toHaveAttribute('src', /42f-2\.webp$/)
+  await page.getByRole('button', { name: '← Вся азбука' }).click()
+  await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
+  await expect(page.locator('.letter-illustration')).toHaveAttribute('src', /410-0\.webp$/)
+  await expect(page.locator('.word-list button').first()).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('writing screen accepts a pointer stroke and keeps controls available', async ({ page }) => {
