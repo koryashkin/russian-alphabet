@@ -15,7 +15,7 @@ function App() {
   const [soundError, setSoundError] = useState(false)
   const available = letters
   const speak = (text: string) => { setSoundError(false); audio.speak(text, () => setSoundError(true)) }
-  const imagePath = `/assets/letters/${selected.uppercase.codePointAt(0)?.toString(16)}.png`
+  const imagePath = `${import.meta.env.BASE_URL}assets/letters/${selected.uppercase.codePointAt(0)?.toString(16)}.png`
   return <main>
     <header className="topbar"><button className="brand" onClick={() => setView('alphabet')}><span className="brand-mark">А</span><span>Русская азбука</span></button><div className="top-actions"><span className="prototype-pill"><Sparkles size={14}/> прототип</span><button className="icon-button" aria-label="Настройки"><Settings2 size={22}/></button></div></header>
     {view === 'alphabet' && <section className="page-shell alphabet-view"><div className="section-heading"><div><span className="eyebrow">РУССКАЯ АЗБУКА · 4–6 ЛЕТ</span><h1 className="catalog-title">Выбери букву</h1></div></div><p className="intro">Нажми на букву, чтобы послушать слово, увидеть картинку и попробовать написать её рукой. Четыре карточки уже интерактивны; остальные подготовлены для следующего шага.</p><div className="letter-grid">{available.map(letter => <button className={`letter-tile ${letter.prototype ? 'ready' : ''}`} key={letter.id} onClick={() => { setSelected(letter); setView('card') }}><span>{letter.uppercase}</span><small>{letter.lowercase}</small><b>{letter.word}</b>{letter.prototype && <i>можно играть</i>}</button>)}</div></section>}

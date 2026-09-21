@@ -10,8 +10,12 @@ test('letter card has three words and never reuses the horse image for A', async
   await page.goto('/')
   await page.getByRole('button', { name: /^Аа автобус/ }).click()
   await expect(page.locator('.word-list button')).toHaveCount(3)
-  await expect(page.locator('.illustration-pending')).toBeVisible()
-  await expect(page.locator('.generated')).toHaveCount(0)
+  const image = page.locator('.generated')
+  await expect(image).toBeVisible()
+  const imageUrl = await image.evaluate(element => getComputedStyle(element).backgroundImage.split('url("')[1]?.split('"')[0])
+  expect(imageUrl).toContain('/assets/letters/')
+  const response = await page.request.get(new URL(imageUrl!, page.url()).toString())
+  expect(response.status()).toBe(200)
 })
 
 test('writing screen accepts a pointer stroke and keeps controls available', async ({ page }) => {
