@@ -89,6 +89,7 @@ main { min-height: 100vh; overflow: hidden; }
 .trace-reference { position: absolute; inset: 9%; width: 82%; height: 82%; overflow: visible; }
 .trace-guide { fill: none; stroke: #b8d1c2; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .stroke-order circle { fill: var(--orange); stroke: #fff; stroke-width: .7; }
+.stroke-marker-leader { stroke: var(--orange); stroke-width: .8; stroke-linecap: round; }
 .stroke-order text { fill: #fff; stroke: none; font: 700 3.4px system-ui; text-anchor: middle; pointer-events: none; }
 .demo-stroke { fill: none; stroke: var(--orange); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw-stroke .8s linear forwards; }
 .copy-model { position: absolute; inset: 0; display: grid; place-items: center; color: #d2dfd3; font: 700 240px var(--font-display); }

@@ -139,6 +139,8 @@ test('show button visibly demonstrates writing stroke by stroke', async ({ page 
   await page.getByRole('button', { name: /Попробовать рукой/ }).click()
   await expect(page.locator('.trace-guide')).toHaveCount(6)
   await expect(page.locator('.stroke-order')).toHaveCount(6)
+  const markerPositions = await page.locator('.stroke-order circle').evaluateAll(circles => circles.map(circle => `${circle.getAttribute('cx')},${circle.getAttribute('cy')}`))
+  expect(new Set(markerPositions).size).toBe(6)
   await page.getByRole('button', { name: 'Показать по шагам' }).click()
   await expect(page.locator('.trace-reference')).toHaveClass(/demonstrating/)
   await expect(page.locator('.demo-stroke')).toHaveCount(6)

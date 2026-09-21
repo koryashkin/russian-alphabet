@@ -40,6 +40,23 @@ export function pathStart(path: string): Point {
   const match = /^M\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/.exec(path)
   return match ? { x: Number(match[1]), y: Number(match[2]) } : { x: 0, y: 0 }
 }
+
+export type StrokeOrderMarker = Point & { start: Point }
+
+export function strokeOrderMarkers(paths: string[]): StrokeOrderMarker[] {
+  const starts = paths.map(pathStart)
+  return starts.map((start, index) => {
+    const coincident = starts
+      .map((point, pointIndex) => ({ point, pointIndex }))
+      .filter(({ point }) => Math.hypot(point.x - start.x, point.y - start.y) < 0.5)
+    if (coincident.length === 1) return { ...start, start }
+
+    const rank = coincident.findIndex(({ pointIndex }) => pointIndex === index)
+    const xOffset = (rank - (coincident.length - 1) / 2) * 9
+    return { x: start.x + xOffset, y: start.y - 5, start }
+  })
+}
+
 export function normalizePoint(clientX: number, clientY: number, rect: Pick<DOMRect, 'left'|'top'|'width'|'height'>): Point {
   return { x: Math.max(0, Math.min(100, (clientX - rect.left) / rect.width * 100)), y: Math.max(0, Math.min(100, (clientY - rect.top) / rect.height * 100)) }
 }

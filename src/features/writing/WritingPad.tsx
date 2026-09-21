@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { Eraser, Undo2, Play, Pencil, Hand } from 'lucide-react'
-import { normalizePoint, pathStart, tracePaths } from './geometry'
+import { normalizePoint, strokeOrderMarkers, tracePaths } from './geometry'
 import type { Stroke } from './geometry'
 
 export function WritingPad({ letter }: { letter: string }) {
@@ -44,7 +44,10 @@ export function WritingPad({ letter }: { letter: string }) {
         {copy && <span className="copy-model" aria-label={`Образец ${letter}`}>{letter}</span>}
         {!copy && <svg key={demo} className={`trace-reference ${demo ? 'demonstrating' : ''}`} viewBox="0 0 100 100" aria-label={`Образец написания ${letter}`}>
           {tracePaths[letter]?.map((path, i) => <path className="trace-guide" key={`guide-${i}`} d={path} pathLength="1" />)}
-          {tracePaths[letter]?.map((path, i) => { const start = pathStart(path); return <g className="stroke-order" key={`order-${i}`}><circle cx={start.x} cy={start.y} r="3.2"/><text x={start.x} y={start.y + 1.35}>{i + 1}</text></g> })}
+          {strokeOrderMarkers(tracePaths[letter] ?? []).map((marker, i) => <g className="stroke-order" key={`order-${i}`}>
+            <line className="stroke-marker-leader" x1={marker.start.x} y1={marker.start.y} x2={marker.x} y2={marker.y}/>
+            <circle cx={marker.x} cy={marker.y} r="3.2"/><text x={marker.x} y={marker.y + 1.35}>{i + 1}</text>
+          </g>)}
           {demo > 0 && tracePaths[letter]?.map((path, i) => <path className="demo-stroke" key={`demo-${i}`} d={path} pathLength="1" style={{ animationDelay: `${i * 0.9}s` }} />)}
         </svg>}
         <canvas ref={canvas} aria-label="Поле для рисования" onPointerDown={e => {

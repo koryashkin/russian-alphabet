@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { alphabet, letters } from '../../src/content/schema'
 import { examples } from '../../src/content/examples'
-import { tracePaths } from '../../src/features/writing/geometry'
+import { strokeOrderMarkers, tracePaths } from '../../src/features/writing/geometry'
 
 describe('alphabet content contract', () => {
   it('contains the complete Russian alphabet in order', () => {
@@ -32,5 +32,17 @@ describe('alphabet content contract', () => {
 
   it('has a non-empty writing demonstration for every letter', () => {
     for (const letter of letters) expect(tracePaths[letter.uppercase]?.length, letter.uppercase).toBeGreaterThan(0)
+  })
+
+  it('keeps every stroke-order number visually separate', () => {
+    for (const letter of letters) {
+      const markers = strokeOrderMarkers(tracePaths[letter.uppercase] ?? [])
+      for (let first = 0; first < markers.length; first += 1) {
+        for (let second = first + 1; second < markers.length; second += 1) {
+          const distance = Math.hypot(markers[first].x - markers[second].x, markers[first].y - markers[second].y)
+          expect(distance, `${letter.uppercase}: markers ${first + 1} and ${second + 1}`).toBeGreaterThan(6)
+        }
+      }
+    }
   })
 })
