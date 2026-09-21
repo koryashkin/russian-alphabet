@@ -13,7 +13,6 @@ export function WritingPad({ letter }: { letter: string }) {
   const [left, setLeft] = useState(false)
   const [demo, setDemo] = useState(0)
   const [count, setCount] = useState(0)
-  const [confirmClear, setConfirmClear] = useState(false)
   const [limit, setLimit] = useState(false)
   const redraw = () => {
     const el = canvas.current; if (!el) return
@@ -64,12 +63,11 @@ export function WritingPad({ letter }: { letter: string }) {
       <div className="writing-tools">
         <button onClick={() => { setCopy(false); setDemo(d => d + 1) }}><Play size={21}/>{demo ? 'Показать ещё раз' : 'Показать по шагам'}</button>
         <button disabled={!count} onClick={() => { strokes.current.pop(); setCount(strokes.current.length); setLimit(false); redraw() }}><Undo2 size={21}/>Отменить</button>
-        <button disabled={!count} onClick={() => setConfirmClear(true)}><Eraser size={21}/>Новый лист</button>
+        <button disabled={!count} onClick={() => { strokes.current = []; setCount(0); setLimit(false); redraw() }}><Eraser size={21}/>Новый лист</button>
         <button aria-pressed={pen} onClick={() => setPen(!pen)}>{pen ? <Pencil size={21}/> : <Hand size={21}/>}{pen ? 'Только перо' : 'Палец'}</button>
         <label className="hand-setting"><input type="checkbox" checked={left} onChange={e => setLeft(e.target.checked)}/> Для левой руки</label>
       </div>
     </div>
-    {confirmClear && <div className="notice" role="alert">Начать на чистом листе? <button onClick={() => { strokes.current = []; setCount(0); setConfirmClear(false); setLimit(false); redraw() }}>Да, очистить</button><button onClick={() => setConfirmClear(false)}>Оставить рисунок</button></div>}
     {limit && <p role="status">Лист заполнен. Можно отменить штрих или начать новый лист.</p>}
     {demo > 0 && !copy && <p className="demo-message" role="status">Смотри на оранжевую линию: штрихи появляются по порядку от цифры 1.</p>}
     <p className="quiet">Здесь можно пробовать. Красиво и правильно с первого раза — не обязательно.</p>

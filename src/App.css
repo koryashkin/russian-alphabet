@@ -100,8 +100,6 @@ main { min-height: 100vh; overflow: hidden; }
 .writing-tools button[aria-pressed="true"] { border-color: var(--green); background: #dcebe3; color: var(--green-dark); }
 .writing-tools button:disabled { cursor: default; opacity: .38; }
 .hand-setting { display: flex; gap: 8px; align-items: center; margin-top: 6px; color: var(--muted); font-size: 12px; }
-.notice { margin-top: 16px; padding: 13px; border-radius: 12px; background: var(--cream); color: var(--muted); font-size: 13px; }
-.notice button { margin-left: 8px; background: none; color: var(--green); font-weight: 800; text-decoration: underline; }
 .demo-message { margin: 16px 0 0; color: #a85b36; font-size: 13px; font-weight: 800; }
 .quiet { margin: 18px 0 0; color: #91a69d; font-size: 12px; text-align: center; }
 

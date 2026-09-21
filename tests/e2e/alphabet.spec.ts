@@ -126,6 +126,11 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
   await page.mouse.move(box.x + 140, box.y + 120)
   await page.mouse.up()
   await expect(page.getByRole('button', { name: /Отменить/ })).toBeEnabled()
+  const newSheet = page.getByRole('button', { name: /Новый лист/ })
+  await expect(newSheet).toBeEnabled()
+  await newSheet.click()
+  await expect(newSheet).toBeDisabled()
+  await expect(page.getByText('Начать на чистом листе?')).toHaveCount(0)
 })
 
 test('show button visibly demonstrates writing stroke by stroke', async ({ page }) => {
