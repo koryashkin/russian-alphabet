@@ -1,0 +1,10 @@
+{
+  "styleId": "alphabet-gouache-v1",
+  "medium": "flat gouache children's-book illustration",
+  "background": "warm off-white",
+  "composition": "one centered recognizable object with generous whitespace",
+  "palette": "calm natural colors with moderate contrast",
+  "mustAvoid": ["letters", "Cyrillic", "Latin", "words", "labels", "numbers", "logos", "watermarks", "people", "extra objects"],
+  "reviewRequired": ["meaning matches Russian word", "no accidental text", "one object", "recognizable at iPad card size"],
+  "promptTemplate": "Educational object illustration for a Russian alphabet app. Subject: {exact object and meaning}. One centered object only, warm off-white background, flat gouache children's-book style, calm natural colors, simple recognizable silhouette, generous whitespace. No letters, no text, no labels, no numbers, no watermark, no extra objects."
+}

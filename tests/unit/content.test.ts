@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { alphabet, letters } from '../../src/content/schema'
 import { examples } from '../../src/content/examples'
 
@@ -16,5 +18,9 @@ describe('alphabet content contract', () => {
   it('does not treat hard or soft signs as phonemes', () => {
     expect(letters.find(letter => letter.uppercase === 'Ь')?.kind).toBe('sign')
     expect(letters.find(letter => letter.uppercase === 'Ъ')?.kind).toBe('sign')
+  })
+
+  it('has one object image for every letter', () => {
+    for (const letter of letters) expect(existsSync(resolve('public/assets/letters', `${letter.uppercase.codePointAt(0)?.toString(16)}.png`))).toBe(true)
   })
 })
