@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { alphabet, letters } from '../../src/content/schema'
 import { examples } from '../../src/content/examples'
+import { tracePaths } from '../../src/features/writing/geometry'
 
 describe('alphabet content contract', () => {
   it('contains the complete Russian alphabet in order', () => {
@@ -22,5 +23,9 @@ describe('alphabet content contract', () => {
 
   it('has one object image for every letter', () => {
     for (const letter of letters) expect(existsSync(resolve('public/assets/letters', `${letter.uppercase.codePointAt(0)?.toString(16)}.png`))).toBe(true)
+  })
+
+  it('has a non-empty writing demonstration for every letter', () => {
+    for (const letter of letters) expect(tracePaths[letter.uppercase]?.length, letter.uppercase).toBeGreaterThan(0)
   })
 })

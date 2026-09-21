@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { Eraser, Undo2, Play, Pencil, Hand } from 'lucide-react'
-import { normalizePoint, tracePaths } from './geometry'
+import { normalizePoint, pathStart, tracePaths } from './geometry'
 import type { Stroke } from './geometry'
 
 export function WritingPad({ letter }: { letter: string }) {
@@ -44,7 +44,9 @@ export function WritingPad({ letter }: { letter: string }) {
       <div className="writing-board">
         {copy && <span className="copy-model" aria-label={`Образец ${letter}`}>{letter}</span>}
         {!copy && <svg key={demo} className={`trace-reference ${demo ? 'demonstrating' : ''}`} viewBox="0 0 100 100" aria-label={`Образец написания ${letter}`}>
-          {tracePaths[letter]?.map((path, i) => <path key={i} d={path} pathLength="1" style={{ animationDelay: `${i * 0.65}s` }} />)}
+          {tracePaths[letter]?.map((path, i) => <path className="trace-guide" key={`guide-${i}`} d={path} pathLength="1" />)}
+          {tracePaths[letter]?.map((path, i) => { const start = pathStart(path); return <g className="stroke-order" key={`order-${i}`}><circle cx={start.x} cy={start.y} r="3.2"/><text x={start.x} y={start.y + 1.35}>{i + 1}</text></g> })}
+          {demo > 0 && tracePaths[letter]?.map((path, i) => <path className="demo-stroke" key={`demo-${i}`} d={path} pathLength="1" style={{ animationDelay: `${i * 0.9}s` }} />)}
         </svg>}
         <canvas ref={canvas} aria-label="Поле для рисования" onPointerDown={e => {
           if (active.current !== null || (pen && e.pointerType !== 'pen') || e.button !== 0) return
@@ -60,7 +62,7 @@ export function WritingPad({ letter }: { letter: string }) {
         <span className="board-caption">{copy ? 'Можно по-своему' : 'Начни с дорожки — и не спеши'}</span>
       </div>
       <div className="writing-tools">
-        <button onClick={() => { setCopy(false); setDemo(d => d + 1) }}><Play size={21}/>Показать</button>
+        <button onClick={() => { setCopy(false); setDemo(d => d + 1) }}><Play size={21}/>{demo ? 'Показать ещё раз' : 'Показать по шагам'}</button>
         <button disabled={!count} onClick={() => { strokes.current.pop(); setCount(strokes.current.length); setLimit(false); redraw() }}><Undo2 size={21}/>Отменить</button>
         <button disabled={!count} onClick={() => setConfirmClear(true)}><Eraser size={21}/>Новый лист</button>
         <button aria-pressed={pen} onClick={() => setPen(!pen)}>{pen ? <Pencil size={21}/> : <Hand size={21}/>}{pen ? 'Только перо' : 'Палец'}</button>
@@ -69,6 +71,7 @@ export function WritingPad({ letter }: { letter: string }) {
     </div>
     {confirmClear && <div className="notice" role="alert">Начать на чистом листе? <button onClick={() => { strokes.current = []; setCount(0); setConfirmClear(false); setLimit(false); redraw() }}>Да, очистить</button><button onClick={() => setConfirmClear(false)}>Оставить рисунок</button></div>}
     {limit && <p role="status">Лист заполнен. Можно отменить штрих или начать новый лист.</p>}
+    {demo > 0 && !copy && <p className="demo-message" role="status">Смотри на оранжевую линию: штрихи появляются по порядку от цифры 1.</p>}
     <p className="quiet">Здесь можно пробовать. Красиво и правильно с первого раза — не обязательно.</p>
   </section>
 }

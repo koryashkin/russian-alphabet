@@ -75,6 +75,20 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
   await expect(page.getByRole('button', { name: /Отменить/ })).toBeEnabled()
 })
 
+test('show button visibly demonstrates writing stroke by stroke', async ({ page }) => {
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву Ё:/ }).click()
+  await page.getByRole('button', { name: /Попробовать рукой/ }).click()
+  await expect(page.locator('.trace-guide')).toHaveCount(6)
+  await expect(page.locator('.stroke-order')).toHaveCount(6)
+  await page.getByRole('button', { name: 'Показать по шагам' }).click()
+  await expect(page.locator('.trace-reference')).toHaveClass(/demonstrating/)
+  await expect(page.locator('.demo-stroke')).toHaveCount(6)
+  await expect.poll(() => page.locator('.demo-stroke').first().evaluate(element => getComputedStyle(element).animationName)).toBe('draw-stroke')
+  await expect(page.getByRole('status')).toContainText('штрихи появляются по порядку')
+  await expect(page.getByRole('button', { name: 'Показать ещё раз' })).toBeVisible()
+})
+
 test('E lesson gives feedback and advances to the next word', async ({ page }) => {
   await page.goto('.')
   await page.getByRole('button', { name: /^Открыть букву Е:/ }).click()
