@@ -1,29 +1,31 @@
 import { useState } from 'react'
 import { ChevronRight, Headphones, Images, PencilLine, Volume2 } from 'lucide-react'
 import { letters, type Letter } from './content/schema'
-import { audio } from './services/audio'
+import { audio, type SoundIssue } from './services/audio'
 import { WritingPad } from './features/writing/WritingPad'
 import { examples } from './content/examples'
-import { EGame } from './features/games/EGame'
+import { LetterPositionGame } from './features/games/LetterPositionGame'
 import './App.css'
 import './word-list.css'
 import './features/games/games.css'
 
 type View = 'alphabet' | 'card' | 'write'
+type SoundHelp = SoundIssue | 'manual'
+const vowels = new Set('АЕЁИОУЫЭЮЯ')
 
 function App() {
   const [selected, setSelected] = useState<Letter>(letters[0])
   const [selectedWordIndex, setSelectedWordIndex] = useState(0)
   const [view, setView] = useState<View>('alphabet')
-  const [soundError, setSoundError] = useState(false)
+  const [soundHelp, setSoundHelp] = useState<SoundHelp | null>(null)
   const words = examples[selected.uppercase] ?? [selected.accentedWord]
   const selectedWord = words[selectedWordIndex] ?? words[0]
   const codePoint = selected.uppercase.codePointAt(0)?.toString(16)
   const imagePath = `${import.meta.env.BASE_URL}assets/words/${codePoint}-${selectedWordIndex}.webp`
 
   const speak = (text: string) => {
-    setSoundError(false)
-    audio.speak(text, () => setSoundError(true))
+    setSoundHelp(null)
+    audio.speak(text, setSoundHelp)
   }
 
   const showView = (nextView: View) => {
@@ -34,7 +36,7 @@ function App() {
   const openLetter = (letter: Letter) => {
     setSelected(letter)
     setSelectedWordIndex(0)
-    setSoundError(false)
+    setSoundHelp(null)
     showView('card')
   }
 
@@ -70,11 +72,11 @@ function App() {
 
       <div className="alphabet-heading">
         <div><span className="eyebrow">ВСЕ БУКВЫ</span><h2 className="catalog-title">Выбери букву</h2></div>
-        <p>Нажми на любую карточку</p>
+        <div className="alphabet-key" aria-label="Цвета букв"><span className="vowel-key">Гласные</span><span className="consonant-key">Согласные</span><span className="sign-key">Знаки</span></div>
       </div>
       <div className="letter-grid">
-        {letters.map((letter, index) => <button
-          className={`letter-tile tone-${index % 5}`}
+        {letters.map(letter => <button
+          className={`letter-tile ${vowels.has(letter.uppercase) ? 'vowel' : letter.kind === 'sign' ? 'sign' : 'consonant'}`}
           aria-label={`Открыть букву ${letter.uppercase}: ${letter.word}`}
           key={letter.id}
           onClick={() => openLetter(letter)}
@@ -103,7 +105,14 @@ function App() {
               onClick={() => { setSelectedWordIndex(index); speak(word) }}
             ><Volume2 size={17}/><strong>{word}</strong></button>)}
           </div>
-          {soundError && <p className="error" role="alert">Звук не запустился. Нажми ещё раз после касания.</p>}
+          <div className="audio-support">
+            <button className="sound-help-button" onClick={() => setSoundHelp('manual')}>Нет звука?</button>
+            {soundHelp && <p className="error" role="status">{soundHelp === 'voice-unavailable'
+              ? 'Русский голос недоступен в этом браузере. Проверьте настройки речи устройства.'
+              : 'Звук не слышно? Увеличьте громкость мультимедиа, выключите беззвучный режим или «Не беспокоить», затем повторите.'}
+              <button onClick={() => speak(selectedWord)}>Повторить</button>
+            </p>}
+          </div>
         </div>
 
         <div className="lesson-card">
@@ -111,7 +120,7 @@ function App() {
           <span className="eyebrow">СЕЙЧАС</span>
           <h2>{selected.uppercase === 'Ь' ? 'Мягкий знак живёт внутри слова' : `Узнаем букву ${selected.uppercase}`}</h2>
           <p>{selected.note}</p>
-          {selected.uppercase === 'Е' && <EGame speak={speak}/>}
+          {selected.uppercase === 'Е' && <LetterPositionGame speak={speak}/>}
           <div className="lesson-actions">
             <button className="primary full" onClick={() => showView('write')}>Попробовать рукой <ChevronRight size={20}/></button>
             <button className="text-button" onClick={() => speak(selected.uppercase === 'Ь' ? 'У мягкого знака нет своего звука' : selectedWord)}><Volume2 size={17}/> Послушать выбранное слово</button>

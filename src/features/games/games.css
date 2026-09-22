@@ -1,1 +1,28 @@
-.e-game{margin-top:28px;padding:22px;border:1px solid #d4dfd5;border-radius:16px;background:#f7f5ed}.game-kicker{font-size:10px;letter-spacing:.14em;color:#a96734;font-weight:700}.e-game h3{font:700 25px Georgia;margin:9px 0 18px}.game-prompt{display:flex;align-items:center;gap:13px;flex-wrap:wrap;color:#527067}.game-prompt strong{font:700 27px Georgia;color:#285f4c}.game-prompt span{font-size:13px}.game-speak{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#e1ede4;color:#285f4c}.game-choices{display:flex;gap:10px;margin-top:18px}.game-choices button{width:58px;height:58px;border-radius:11px;background:#e5e2d6;font:700 28px Georgia}.game-choices button.correct{background:#b8dcbf;color:#205d3b}.game-choices button.wrong{background:#f4c4b7;color:#8f3f32}.game-result{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:15px;color:#8f3f32;font-size:13px}.game-result.success{color:#205d3b}.game-result button{background:none;text-decoration:underline;color:inherit;font-weight:700;margin-left:auto}
+.e-game {
+  margin-top: 28px;
+  padding: 22px;
+  border: 1px solid #d4dfd5;
+  border-radius: 16px;
+  background: #f7f5ed;
+}
+
+.game-kicker { color: #a96734; font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+.e-game h3 { margin: 9px 0 8px; font: 700 25px var(--font-display); }
+.game-instruction { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.game-prompt { display: flex; align-items: center; gap: 13px; margin-top: 17px; color: #527067; }
+.game-prompt strong { color: #285f4c; font: 700 30px/1 var(--font-display); }
+.game-speak { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #e1ede4; color: #285f4c; }
+.game-choices { display: flex; gap: 10px; margin-top: 18px; }
+.position-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.position-choices button { min-height: 56px; padding: 9px 7px; border-radius: 12px; background: #e5e2d6; color: var(--ink); font-size: 13px; font-weight: 800; line-height: 1.2; }
+.position-choices button.correct { background: #b8dcbf; color: #205d3b; }
+.position-choices button.wrong { background: #f4c4b7; color: #8f3f32; }
+.game-result { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 15px; color: #8f3f32; font-size: 13px; line-height: 1.4; }
+.game-result.success { color: #205d3b; }
+.game-result button { margin-left: auto; background: none; color: inherit; font-size: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 430px) {
+  .e-game { padding: 18px; }
+  .position-choices { grid-template-columns: 1fr; }
+  .position-choices button { min-height: 48px; }
+}

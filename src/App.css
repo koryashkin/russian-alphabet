@@ -40,15 +40,19 @@ main { min-height: 100vh; overflow: hidden; }
 .letter-three { left: 14%; bottom: 11%; color: #725a92; }
 .alphabet-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-top: 64px; }
 .catalog-title { margin: 8px 0 0; color: var(--ink); font: 700 clamp(38px, 5vw, 58px)/1 var(--font-display); letter-spacing: -.035em; }
-.alphabet-heading p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+.alphabet-key { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; color: var(--muted); font-size: 12px; font-weight: 700; }
+.alphabet-key span { display: inline-flex; align-items: center; gap: 6px; }
+.alphabet-key span::before { width: 10px; height: 10px; border-radius: 50%; content: ''; }
+.vowel-key::before { background: #f2c968; }
+.consonant-key::before { background: #9bcfc0; }
+.sign-key::before { background: #c9b6d8; }
 .letter-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 13px; margin-top: 25px; }
 .letter-tile { position: relative; min-width: 0; min-height: 156px; padding: 18px; overflow: hidden; border: 1px solid rgba(25,60,51,.08); border-radius: 22px 22px 22px 8px; background: #e6eee7; text-align: left; box-shadow: 0 5px 0 rgba(25,60,51,.14); transition: transform .18s ease, box-shadow .18s ease; }
 .letter-tile:hover { transform: translateY(-5px) rotate(-.5deg); box-shadow: 0 11px 0 rgba(25,60,51,.1); }
 .letter-tile:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(25,60,51,.15); }
-.letter-tile.tone-1 { background: #f2e3c7; }
-.letter-tile.tone-2 { background: #dcebed; }
-.letter-tile.tone-3 { background: #f2ddd6; }
-.letter-tile.tone-4 { background: #e9e0ef; }
+.letter-tile.vowel { background: #f6e2af; }
+.letter-tile.consonant { background: #d9eee6; }
+.letter-tile.sign { background: #e8e0ef; }
 .tile-glyph { display: block; font: 700 54px/.9 var(--font-display); letter-spacing: -.04em; }
 .tile-glyph small { margin-left: 6px; color: var(--orange); font-size: .52em; }
 .letter-tile b { display: block; max-width: calc(100% - 22px); margin-top: 18px; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
@@ -63,7 +67,10 @@ main { min-height: 100vh; overflow: hidden; }
 .listen-letter { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 999px; background: rgba(255,250,240,.78); color: var(--green); font-size: 12px; font-weight: 800; }
 .big-glyph { margin: 36px 0 32px; color: var(--green); font: 700 clamp(130px, 18vw, 230px)/.72 var(--font-display); text-align: center; letter-spacing: -.06em; }
 .big-glyph small { margin-left: 12px; color: var(--orange); font-size: .4em; }
-.error { margin: 15px 0 0; color: #a44939; font-size: 12px; }
+.audio-support { display: flex; flex-direction: column; align-items: flex-start; margin-top: 14px; }
+.sound-help-button { padding: 0; background: none; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.error { margin: 9px 0 0; color: #9d4c34; font-size: 12px; line-height: 1.5; }
+.error button { margin-left: 5px; padding: 0; background: none; color: inherit; font-size: inherit; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .lesson-card { display: flex; flex-direction: column; justify-content: center; overflow: hidden; background: #fffaf0; }
 .lesson-card::after { content: ''; position: absolute; right: -85px; bottom: -100px; width: 230px; height: 230px; border-radius: 50%; background: #f1dfb7; opacity: .55; }
 .lesson-number { position: absolute; top: 28px; right: 34px; color: rgba(25,60,51,.07); font: 700 88px/1 var(--font-display); }
@@ -126,7 +133,7 @@ main { min-height: 100vh; overflow: hidden; }
   .sun-shape { width: 180px; height: 180px; }
   .floating-letter { width: 48px; height: 48px; border-radius: 17px 17px 17px 6px; font-size: 23px; }
   .alphabet-heading { margin-top: 45px; }
-  .alphabet-heading p { display: none; }
+  .alphabet-key { margin-bottom: 0; }
   .letter-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .letter-tile { min-height: 128px; padding: 14px; border-radius: 18px 18px 18px 7px; }
   .tile-glyph { font-size: 43px; }

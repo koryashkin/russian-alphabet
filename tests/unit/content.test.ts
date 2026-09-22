@@ -45,4 +45,20 @@ describe('alphabet content contract', () => {
       }
     }
   })
+
+  it('uses a consistent print-letter direction for key strokes', () => {
+    expect(tracePaths['Н']).toEqual([
+      'M 25 18 L 25 82',
+      'M 75 18 L 75 82',
+      'M 25 50 L 75 50',
+    ])
+    expect(tracePaths['А']?.[0]).toBe('M 48 18 L 18 82')
+    expect(tracePaths['Б']).toEqual(['M 28 20 L 72 20', 'M 28 20 L 28 82', 'M 28 51 L 55 51 C 82 51 82 82 55 82 L 28 82'])
+    expect(tracePaths['Г']).toEqual(['M 28 20 L 72 20', 'M 28 20 L 28 82'])
+    expect(tracePaths['П']).toEqual(['M 25 20 L 25 82', 'M 25 20 L 75 20', 'M 75 20 L 75 82'])
+    expect(tracePaths['М']).toEqual(['M 25 20 L 25 80', 'M 25 20 L 50 58 L 75 20', 'M 75 20 L 75 80'])
+    expect(tracePaths['Ц']).toEqual(['M 23 18 L 23 82', 'M 23 82 L 70 82', 'M 70 18 L 70 82 L 82 82 L 82 92'])
+    expect(tracePaths['Ш']).toEqual(['M 20 18 L 20 82', 'M 50 18 L 50 82', 'M 80 18 L 80 82', 'M 20 82 L 80 82'])
+    expect(tracePaths['Щ']).toEqual(['M 17 18 L 17 82', 'M 45 18 L 45 82', 'M 73 18 L 73 82', 'M 17 82 L 84 82 L 84 92'])
+  })
 })

@@ -8,6 +8,10 @@ test('opens on the alphabet and exposes all 33 letters', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Выбери букву' })).toBeVisible()
   await expect(page.getByRole('heading', { name: /Буквы, которые хочется/ })).toBeVisible()
   await expect(page.locator('.header-count')).toHaveText('33 буквы · 99 картинок')
+  await expect(page.getByLabel('Цвета букв')).toHaveText(/Гласные.*Согласные.*Знаки/)
+  await expect(page.getByRole('button', { name: /^Открыть букву А:/ })).toHaveClass(/vowel/)
+  await expect(page.getByRole('button', { name: /^Открыть букву Б:/ })).toHaveClass(/consonant/)
+  await expect(page.getByRole('button', { name: /^Открыть букву Ь:/ })).toHaveClass(/sign/)
   await expect(page.getByText('можно играть')).toHaveCount(0)
   await expect(page.getByText('прототип', { exact: true })).toHaveCount(0)
   await expect(page.getByRole('contentinfo')).toHaveCount(0)
@@ -149,16 +153,72 @@ test('show button visibly demonstrates writing stroke by stroke', async ({ page 
   await expect(page.getByRole('button', { name: 'Показать ещё раз' })).toBeVisible()
 })
 
-test('E lesson gives feedback and advances to the next word', async ({ page }) => {
+test('all 33 letters have complete, separated writing guides', async ({ page }) => {
+  test.setTimeout(120_000)
+  await page.goto('.')
+  const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+
+  for (const letter of alphabet) {
+    await page.getByRole('button', { name: new RegExp(`^Открыть букву ${letter}:`) }).click()
+    await page.getByRole('button', { name: /Попробовать рукой/ }).click()
+
+    const board = page.locator('.writing-board')
+    const guides = page.locator('.trace-guide')
+    const markers = page.locator('.stroke-order')
+    const guideCount = await guides.count()
+    expect(guideCount, `${letter}: guide count`).toBeGreaterThan(0)
+    await expect(markers, `${letter}: one number per stroke`).toHaveCount(guideCount)
+    await expect(page.getByLabel(`Образец написания ${letter}`)).toBeVisible()
+    await expect(page.getByLabel('Поле для рисования')).toBeVisible()
+
+    const markerData = await markers.evaluateAll(nodes => nodes.map(node => {
+      const circle = node.querySelector('circle')
+      return {
+        label: node.querySelector('text')?.textContent,
+        x: Number(circle?.getAttribute('cx')),
+        y: Number(circle?.getAttribute('cy')),
+      }
+    }))
+    expect(markerData.map(marker => marker.label), `${letter}: marker order`).toEqual(
+      Array.from({ length: guideCount }, (_, index) => String(index + 1)),
+    )
+    for (let first = 0; first < markerData.length; first += 1) {
+      expect(markerData[first].x, `${letter}: marker ${first + 1} x`).toBeGreaterThanOrEqual(3.2)
+      expect(markerData[first].x, `${letter}: marker ${first + 1} x`).toBeLessThanOrEqual(96.8)
+      expect(markerData[first].y, `${letter}: marker ${first + 1} y`).toBeGreaterThanOrEqual(3.2)
+      expect(markerData[first].y, `${letter}: marker ${first + 1} y`).toBeLessThanOrEqual(96.8)
+      for (let second = first + 1; second < markerData.length; second += 1) {
+        const distance = Math.hypot(markerData[first].x - markerData[second].x, markerData[first].y - markerData[second].y)
+        expect(distance, `${letter}: markers ${first + 1} and ${second + 1} overlap`).toBeGreaterThan(6.4)
+      }
+    }
+
+    const boardBox = await board.boundingBox()
+    expect(boardBox, `${letter}: writing board`).not.toBeNull()
+    await page.getByRole('button', { name: 'Показать по шагам' }).click()
+    await expect(page.locator('.demo-stroke'), `${letter}: animated strokes`).toHaveCount(guideCount)
+    await page.getByRole('button', { name: `← К букве ${letter}` }).click()
+    await page.getByRole('button', { name: '← Вся азбука' }).click()
+  }
+})
+
+test('E lesson asks where the letter is in three different words', async ({ page }) => {
   await page.goto('.')
   await page.getByRole('button', { name: /^Открыть букву Е:/ }).click()
-  await expect(page.getByRole('heading', { name: 'Слышим Е в начале слова' })).toBeVisible()
-  await page.getByRole('button', { name: 'И', exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('Послушай слово ещё раз')
-  await page.getByRole('button', { name: 'Е', exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('Верно')
-  await page.getByRole('button', { name: 'Следующее слово' }).click()
+  await expect(page.getByRole('heading', { name: 'Где в слове буква Е?' })).toBeVisible()
   await expect(page.locator('.game-prompt strong')).toHaveText('еда́')
+  await page.getByRole('button', { name: 'В середине', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('Послушай слово ещё раз')
+  await page.getByRole('button', { name: 'В начале', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('Буква Е стоит первой')
+  await page.getByRole('button', { name: 'Следующее слово' }).click()
+  await expect(page.locator('.game-prompt strong')).toHaveText('по́езд')
+  await page.getByRole('button', { name: 'В середине', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('Буква Е стоит в середине')
+  await page.getByRole('button', { name: 'Следующее слово' }).click()
+  await expect(page.locator('.game-prompt strong')).toHaveText('кафе́')
+  await page.getByRole('button', { name: 'В конце', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('Буква Е стоит последней')
 })
 
 test('audio buttons call the browser speech API with Russian text', async ({ page }) => {
@@ -172,4 +232,23 @@ test('audio buttons call the browser speech API with Russian text', async ({ pag
   await page.getByRole('button', { name: /^Открыть букву М:/ }).click()
   await page.locator('.word-list button').first().click()
   await expect.poll(() => page.evaluate(() => (window as unknown as { spoken: string[] }).spoken)).toContain('ма́к')
+})
+
+test('shows a clear sound-help message when browser speech is unavailable', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: undefined })
+  })
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
+  await page.locator('.word-list button').first().click()
+  await expect(page.locator('.audio-support [role="status"]')).toContainText('Звук не слышно?')
+  await expect(page.getByRole('button', { name: 'Повторить' })).toBeVisible()
+})
+
+test('offers sound directions on request when a device is silent', async ({ page }) => {
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
+  await page.getByRole('button', { name: 'Нет звука?' }).click()
+  await expect(page.locator('.audio-support [role="status"]')).toContainText('Увеличьте громкость мультимедиа')
+  await expect(page.getByRole('button', { name: 'Повторить' })).toBeVisible()
 })
