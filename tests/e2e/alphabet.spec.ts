@@ -7,7 +7,8 @@ test('opens on the alphabet and exposes all 33 letters', async ({ page }) => {
   for (const tile of await tiles.all()) await expect(tile).toBeEnabled()
   await expect(page.getByRole('heading', { name: 'Выбери букву' })).toBeVisible()
   await expect(page.getByRole('heading', { name: /Буквы, которые хочется/ })).toBeVisible()
-  await expect(page.locator('.header-count')).toHaveText('33 буквы · 99 картинок')
+  await expect(page.locator('.header-count')).toHaveCount(0)
+  await expect(page.getByLabel('Возможности азбуки').getByRole('button')).toHaveCount(0)
   await expect(page.getByLabel('Цвета букв')).toHaveText(/Гласные.*Согласные.*Знаки/)
   await expect(page.getByRole('button', { name: /^Открыть букву А:/ })).toHaveClass(/vowel/)
   await expect(page.getByRole('button', { name: /^Открыть букву Б:/ })).toHaveClass(/consonant/)
@@ -32,6 +33,7 @@ test('main screens do not overflow the viewport', async ({ page }) => {
 })
 
 test('every letter opens a complete card', async ({ page }) => {
+  test.setTimeout(120_000)
   await page.goto('.')
   const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
   for (const letter of alphabet) {
@@ -40,6 +42,8 @@ test('every letter opens a complete card', async ({ page }) => {
     await expect(page.locator('.word-list button')).toHaveCount(3)
     await expect(page.getByRole('button', { name: 'Слушать букву' })).toBeVisible()
     await expect(page.getByRole('button', { name: /Попробовать рукой/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: `Где в слове буква ${letter}?` })).toBeVisible()
+    await expect(page.locator('.letter-game .game-choices button')).toHaveCount(3)
     const image = page.locator('.letter-illustration')
     await expect(image).toBeVisible()
     await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0), { message: `Image for ${letter} must load` }).toBeGreaterThan(0)
@@ -135,6 +139,7 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
   await newSheet.click()
   await expect(newSheet).toBeDisabled()
   await expect(page.getByText('Начать на чистом листе?')).toHaveCount(0)
+  await expect(page.getByText('Для левой руки')).toHaveCount(0)
 })
 
 test('show button visibly demonstrates writing stroke by stroke', async ({ page }) => {

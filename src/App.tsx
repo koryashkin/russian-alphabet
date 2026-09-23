@@ -46,7 +46,6 @@ function App() {
         <span className="brand-mark" aria-hidden="true">А</span>
         <span className="brand-copy"><strong>Русская азбука</strong><small>слушаем, смотрим, пишем</small></span>
       </button>
-      <span className="header-count">33 буквы · 99 картинок</span>
     </header>
 
     {view === 'alphabet' && <section className="page-shell alphabet-view">
@@ -120,7 +119,7 @@ function App() {
           <span className="eyebrow">СЕЙЧАС</span>
           <h2>{selected.uppercase === 'Ь' ? 'Мягкий знак живёт внутри слова' : `Узнаем букву ${selected.uppercase}`}</h2>
           <p>{selected.note}</p>
-          {selected.uppercase === 'Е' && <LetterPositionGame speak={speak}/>}
+          <LetterPositionGame key={selected.uppercase} letter={selected.uppercase} words={words} speak={speak}/>
           <div className="lesson-actions">
             <button className="primary full" onClick={() => showView('write')}>Попробовать рукой <ChevronRight size={20}/></button>
             <button className="text-button" onClick={() => speak(selected.uppercase === 'Ь' ? 'У мягкого знака нет своего звука' : selectedWord)}><Volume2 size={17}/> Послушать выбранное слово</button>

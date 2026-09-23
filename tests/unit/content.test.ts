@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { alphabet, letters } from '../../src/content/schema'
 import { examples } from '../../src/content/examples'
+import { gameWordsForLetter, positionChoices, positionInWord } from '../../src/features/games/gameData'
 import { strokeOrderMarkers, tracePaths } from '../../src/features/writing/geometry'
 
 describe('alphabet content contract', () => {
@@ -14,6 +15,18 @@ describe('alphabet content contract', () => {
 
   it('has at least three examples for every letter', () => {
     for (const letter of letters) expect(examples[letter.uppercase]).toHaveLength(3)
+  })
+
+  it('has three valid game rounds for every letter', () => {
+    for (const letter of letters) {
+      const words = gameWordsForLetter(letter.uppercase, examples[letter.uppercase])
+      expect(words, letter.uppercase).toHaveLength(3)
+      for (const word of words) {
+        const plainWord = word.normalize('NFD').replace(/[\u0300\u0301]/g, '').normalize('NFC').toLowerCase()
+        expect(plainWord, `${letter.uppercase}: ${word}`).toContain(letter.lowercase)
+        expect(positionChoices, `${letter.uppercase}: ${word}`).toContain(positionInWord(letter.uppercase, word))
+      }
+    }
   })
 
   it('does not treat hard or soft signs as phonemes', () => {

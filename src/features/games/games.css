@@ -1,4 +1,4 @@
-.e-game {
+.letter-game {
   margin-top: 28px;
   padding: 22px;
   border: 1px solid #d4dfd5;
@@ -7,7 +7,7 @@
 }
 
 .game-kicker { color: #a96734; font-size: 10px; font-weight: 700; letter-spacing: .14em; }
-.e-game h3 { margin: 9px 0 8px; font: 700 25px var(--font-display); }
+.letter-game h3 { margin: 9px 0 8px; font: 700 25px var(--font-display); }
 .game-instruction { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .game-prompt { display: flex; align-items: center; gap: 13px; margin-top: 17px; color: #527067; }
 .game-prompt strong { color: #285f4c; font: 700 30px/1 var(--font-display); }
@@ -22,7 +22,7 @@
 .game-result button { margin-left: auto; background: none; color: inherit; font-size: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 430px) {
-  .e-game { padding: 18px; }
+  .letter-game { padding: 18px; }
   .position-choices { grid-template-columns: 1fr; }
   .position-choices button { min-height: 48px; }
 }

@@ -10,7 +10,6 @@ export function WritingPad({ letter }: { letter: string }) {
   const active = useRef<number | null>(null)
   const [copy, setCopy] = useState(false)
   const [pen, setPen] = useState(false)
-  const [left, setLeft] = useState(false)
   const [demo, setDemo] = useState(0)
   const [count, setCount] = useState(0)
   const [limit, setLimit] = useState(false)
@@ -39,7 +38,7 @@ export function WritingPad({ letter }: { letter: string }) {
   }
   return <section className="writing-section">
     <div className="section-heading"><div><span className="eyebrow">ПОПРОБУЕМ РУКОЙ</span><h2>У каждой буквы свой путь</h2></div><div className="segmented"><button aria-pressed={!copy} onClick={() => setCopy(false)}>Обведи</button><button aria-pressed={copy} onClick={() => setCopy(true)}>Напиши рядом</button></div></div>
-    <div className={`writing-layout ${left ? 'left-handed' : ''}`}>
+    <div className="writing-layout">
       <div className="writing-board">
         {copy && <span className="copy-model" aria-label={`Образец ${letter}`}>{letter}</span>}
         {!copy && <svg key={demo} className={`trace-reference ${demo ? 'demonstrating' : ''}`} viewBox="0 0 100 100" aria-label={`Образец написания ${letter}`}>
@@ -68,7 +67,6 @@ export function WritingPad({ letter }: { letter: string }) {
         <button disabled={!count} onClick={() => { strokes.current.pop(); setCount(strokes.current.length); setLimit(false); redraw() }}><Undo2 size={21}/>Отменить</button>
         <button disabled={!count} onClick={() => { strokes.current = []; setCount(0); setLimit(false); redraw() }}><Eraser size={21}/>Новый лист</button>
         <button aria-pressed={pen} onClick={() => setPen(!pen)}>{pen ? <Pencil size={21}/> : <Hand size={21}/>}{pen ? 'Только перо' : 'Палец'}</button>
-        <label className="hand-setting"><input type="checkbox" checked={left} onChange={e => setLeft(e.target.checked)}/> Для левой руки</label>
       </div>
     </div>
     {limit && <p role="status">Лист заполнен. Можно отменить штрих или начать новый лист.</p>}

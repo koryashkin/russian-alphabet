@@ -12,7 +12,7 @@ An interactive Russian alphabet for children aged 4–6. This family pet project
 - Hear letters and words through the browser speech engine.
 - Explore three words and three matching illustrations for every letter — 99 images in total.
 - Watch a print-letter model stroke by stroke and draw with a finger or Apple Pencil.
-- Play three rounds with Е: find whether it is at the beginning, in the middle, or at the end of a word.
+- Play three rounds for every letter: find whether it is at the beginning, in the middle, or at the end of a word.
 - Use the app on a phone, tablet, or desktop without an account.
 
 ![Letter card with three interactive words](docs/screenshots/letter-card.png)
@@ -25,7 +25,7 @@ I built this project for my child and for other families who want a calm, visual
 
 ## Development and quality
 
-The app is a static React and TypeScript site built with Vite. Illustrations are stored as optimized WebP assets; letters and labels remain HTML so the generated artwork cannot introduce an incorrect glyph. Writing guides use printed capital letters rather than cursive. GitHub Actions runs linting, content tests, a production build, and Playwright browser tests for desktop and mobile before deploying to GitHub Pages. The browser suite opens all 33 cards and writing guides, decodes all 99 images, checks word switching, tracing controls, the Е game, responsive layout, and the sound-help fallback.
+The app is a static React and TypeScript site built with Vite. Illustrations are stored as optimized WebP assets; letters and labels remain HTML so the generated artwork cannot introduce an incorrect glyph. Writing guides use printed capital letters rather than cursive. GitHub Actions runs linting, content tests, and a production build before deploying to GitHub Pages. The complete Playwright browser suite is run locally: it opens all 33 cards and writing guides, decodes all 99 images, checks word switching, tracing controls, games for every letter, responsive layout, and the sound-help fallback.
 
 ```bash
 npm install
@@ -53,7 +53,7 @@ Project documentation:
 - Буквы и слова озвучиваются средствами браузера.
 - Для каждой буквы есть три слова и три подходящие картинки — всего 99 иллюстраций.
 - Печатное написание показывается по штрихам; рисовать можно пальцем или Apple Pencil.
-- Для буквы Е есть три раунда: нужно определить, где она стоит в слове — в начале, в середине или в конце.
+- Для каждой буквы есть три раунда: нужно определить, где она стоит в слове — в начале, в середине или в конце.
 - Приложение работает на телефоне, планшете и компьютере без регистрации.
 
 ## Для чего создан проект
@@ -62,7 +62,7 @@ Project documentation:
 
 ## Разработка и проверка
 
-Это статическое приложение на React, TypeScript и Vite. Иллюстрации оптимизированы в WebP, а буквы и подписи выводятся через HTML, чтобы генерация изображения не могла исказить букву. В прописях используются печатные заглавные буквы, а не курсив. Перед публикацией GitHub Actions запускает линтер, проверку учебных данных, production-сборку и Playwright-тесты в мобильном и настольном режимах. Браузерные тесты проходят все 33 карточки и трафарета, декодируют все 99 изображений, проверяют переключение слов, рисование, показ штрихов, игру с Е, адаптивность и помощь со звуком. После успешной проверки сайт автоматически публикуется на GitHub Pages.
+Это статическое приложение на React, TypeScript и Vite. Иллюстрации оптимизированы в WebP, а буквы и подписи выводятся через HTML, чтобы генерация изображения не могла исказить букву. В прописях используются печатные заглавные буквы, а не курсив. Перед публикацией GitHub Actions запускает линтер, проверку учебных данных и production-сборку. Полный набор Playwright-тестов запускается локально в мобильном и настольном режимах: он проходит все 33 карточки и трафарета, декодирует все 99 изображений, проверяет переключение слов, рисование, показ штрихов, игры для каждой буквы, адаптивность и помощь со звуком. После успешной проверки сайт автоматически публикуется на GitHub Pages.
 
 Документация проекта:
 
