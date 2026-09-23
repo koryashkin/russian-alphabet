@@ -95,15 +95,15 @@ main { min-height: 100vh; overflow: hidden; }
 .segmented button[aria-pressed="true"] { background: var(--cream); color: var(--ink); box-shadow: 0 2px 8px rgba(25,60,51,.08); }
 .writing-layout { display: grid; grid-template-columns: minmax(0,1fr) 190px; gap: 20px; margin-top: 28px; }
 .writing-board { position: relative; height: min(54vw, 590px); min-height: 350px; overflow: hidden; border: 1px solid rgba(25,60,51,.07); border-radius: 24px; background: var(--cream); }
-.trace-reference { position: absolute; inset: 9%; width: 82%; height: 82%; overflow: visible; }
+.trace-reference { position: absolute; z-index: 0; inset: 9%; width: 82%; height: 82%; overflow: visible; pointer-events: none; }
 .trace-guide { fill: none; stroke: #b8d1c2; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .stroke-order circle { fill: var(--orange); stroke: #fff; stroke-width: .7; }
 .stroke-marker-leader { stroke: var(--orange); stroke-width: .8; stroke-linecap: round; }
 .stroke-order text { fill: #fff; stroke: none; font: 700 3.4px system-ui; text-anchor: middle; pointer-events: none; }
 .demo-stroke { fill: none; stroke: var(--orange); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw-stroke .8s linear forwards; }
-.copy-model { position: absolute; inset: 0; display: grid; place-items: center; color: #d2dfd3; font: 700 240px var(--font-display); }
-.writing-board canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
-.board-caption { position: absolute; right: 0; bottom: 16px; left: 0; color: #91a69d; font-size: 12px; text-align: center; }
+.copy-model { position: absolute; z-index: 0; inset: 0; display: grid; place-items: center; color: #d2dfd3; font: 700 240px var(--font-display); pointer-events: none; }
+.writing-board canvas { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; touch-action: none; }
+.board-caption { position: absolute; z-index: 2; right: 0; bottom: 16px; left: 0; color: #91a69d; font-size: 12px; text-align: center; pointer-events: none; }
 .writing-tools { display: flex; flex-direction: column; gap: 10px; }
 .writing-tools button { display: flex; align-items: center; gap: 9px; min-height: 49px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 14px; background: var(--cream); font-size: 13px; font-weight: 700; text-align: left; }
 .writing-tools button:first-child { background: var(--green); color: #fff; }

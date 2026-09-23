@@ -34,7 +34,7 @@ test('main screens do not overflow the viewport', async ({ page }) => {
 })
 
 test('every letter opens a complete card', async ({ page }) => {
-  test.setTimeout(120_000)
+  test.setTimeout(180_000)
   await page.goto('.')
   const alphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
   for (const letter of alphabet) {
@@ -50,7 +50,9 @@ test('every letter opens a complete card', async ({ page }) => {
     const image = page.locator('.letter-illustration')
     await expect(image).toBeVisible()
     await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0), { message: `Image for ${letter} must load` }).toBeGreaterThan(0)
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'auto' }))
     await page.getByRole('button', { name: '← Вся азбука' }).click()
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
   }
 })
 
@@ -140,6 +142,7 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
   await page.goto('.')
   await page.getByRole('button', { name: /^Открыть букву М:/ }).click()
   await page.getByRole('button', { name: /Попробовать рукой/ }).click()
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
   const canvas = page.locator('canvas')
   const box = await canvas.boundingBox()
   if (!box) throw new Error('writing canvas is not visible')

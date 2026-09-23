@@ -53,7 +53,7 @@ export function WritingPad({ letter }: { letter: string }) {
           if (active.current !== null || (pen && e.pointerType !== 'pen') || e.button !== 0) return
           if (strokes.current.length >= 150) { setLimit(true); return }
           active.current = e.pointerId; e.currentTarget.setPointerCapture(e.pointerId)
-          strokes.current.push([normalizePoint(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect())]); redraw()
+          strokes.current.push([normalizePoint(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect())]); setCount(strokes.current.length); redraw()
         }} onPointerMove={e => {
           if (active.current !== e.pointerId) return
           const current = strokes.current.at(-1)!
