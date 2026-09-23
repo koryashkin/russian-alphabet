@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronRight, Headphones, Images, PencilLine, Volume2 } from 'lucide-react'
+import { ChevronRight, GitBranch, Headphones, Images, PencilLine, Volume2 } from 'lucide-react'
 import { letters, type Letter } from './content/schema'
 import { audio, type SoundIssue } from './services/audio'
 import { WritingPad } from './features/writing/WritingPad'
@@ -16,6 +16,7 @@ const vowels = new Set('АЕЁИОУЫЭЮЯ')
 function App() {
   const [selected, setSelected] = useState<Letter>(letters[0])
   const [selectedWordIndex, setSelectedWordIndex] = useState(0)
+  const [illustrationRevealed, setIllustrationRevealed] = useState(false)
   const [view, setView] = useState<View>('alphabet')
   const [soundHelp, setSoundHelp] = useState<SoundHelp | null>(null)
   const words = examples[selected.uppercase] ?? [selected.accentedWord]
@@ -36,6 +37,7 @@ function App() {
   const openLetter = (letter: Letter) => {
     setSelected(letter)
     setSelectedWordIndex(0)
+    setIllustrationRevealed(false)
     setSoundHelp(null)
     showView('card')
   }
@@ -96,14 +98,19 @@ function App() {
             <button className="listen-letter" onClick={() => speak(`Буква ${selected.uppercase}`)}><Volume2 size={18}/> Слушать букву</button>
           </div>
           <div className="big-glyph">{selected.uppercase}<small>{selected.lowercase}</small></div>
-          <img key={imagePath} className="letter-illustration" src={imagePath} alt={`Иллюстрация: ${selectedWord}`} />
+          <div className="illustration-stage">
+            {illustrationRevealed
+              ? <img key={imagePath} className="letter-illustration" src={imagePath} alt={`Иллюстрация: ${selectedWord}`} />
+              : <div className="illustration-prompt" role="status"><Headphones size={27}/><strong>Послушай слово</strong><span>Представь его, а потом проверь себя.</span></div>}
+          </div>
           <div className="word-list">
             {words.map((word, index) => <button
               key={`${word}-${index}`}
               aria-pressed={selectedWordIndex === index}
-              onClick={() => { setSelectedWordIndex(index); speak(word) }}
+              onClick={() => { setSelectedWordIndex(index); setIllustrationRevealed(false); speak(word) }}
             ><Volume2 size={17}/><strong>{word}</strong></button>)}
           </div>
+          {!illustrationRevealed && <button className="reveal-illustration" onClick={() => setIllustrationRevealed(true)}><Images size={18}/> Показать картинку</button>}
           <div className="audio-support">
             <button className="sound-help-button" onClick={() => setSoundHelp('manual')}>Нет звука?</button>
             {soundHelp && <p className="error" role="status">{soundHelp === 'voice-unavailable'
@@ -131,6 +138,11 @@ function App() {
       <button className="back-link" onClick={() => showView('card')}>← К букве {selected.uppercase}</button>
       <WritingPad letter={selected.uppercase}/>
     </section>}
+
+    <footer className="site-footer">
+      <span>Нашли ошибку или есть идея?</span>
+      <a href="https://github.com/koryashkin/russian-alphabet/issues" target="_blank" rel="noreferrer"><GitBranch size={17}/> Напишите в GitHub</a>
+    </footer>
   </main>
 }
 

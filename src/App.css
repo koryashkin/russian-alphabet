@@ -20,6 +20,8 @@ main { min-height: 100vh; overflow: hidden; }
 .brand-copy strong { font-size: 16px; letter-spacing: -.02em; }
 .brand-copy small { margin-top: 5px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .page-shell { width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 46px 0 76px; }
+.site-footer { display: flex; align-items: center; justify-content: center; gap: 9px; width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 24px 0 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.site-footer a { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .eyebrow { color: #ac5b35; font-size: 11px; font-weight: 800; letter-spacing: .16em; }
 
 .welcome-card { display: grid; grid-template-columns: 1.25fr .75fr; min-height: 360px; overflow: hidden; border: 1px solid rgba(25, 60, 51, .08); border-radius: 38px; background: #f1e4c9; box-shadow: var(--shadow); }
@@ -124,6 +126,7 @@ main { min-height: 100vh; overflow: hidden; }
   .brand-mark { width: 39px; height: 39px; font-size: 25px; }
   .brand-copy small { display: none; }
   .page-shell, .write-view { width: min(100% - 28px, 1240px); padding: 26px 0 52px; }
+  .site-footer { flex-wrap: wrap; width: min(100% - 28px, 1240px); padding: 20px 0 28px; text-align: center; }
   .welcome-card { grid-template-columns: 1fr; border-radius: 27px; }
   .welcome-copy { padding: 32px 25px; }
   .welcome-copy h1 { font-size: clamp(39px, 12vw, 54px); }
