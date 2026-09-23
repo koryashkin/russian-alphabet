@@ -17,6 +17,18 @@ describe('alphabet content contract', () => {
     for (const letter of letters) expect(examples[letter.uppercase]).toHaveLength(3)
   })
 
+  it('does not repeat an example word within a letter card', () => {
+    for (const letter of letters) {
+      const plainWords = examples[letter.uppercase].map(word => word.normalize('NFD').replace(/[\u0300\u0301]/g, '').normalize('NFC').toLowerCase())
+      expect(new Set(plainWords).size, letter.uppercase).toBe(plainWords.length)
+    }
+  })
+
+  it('uses distinct replacement words for the repaired cards', () => {
+    expect(examples['Б']).toEqual(['ба́нт', 'бараба́н', 'бе́лка'])
+    expect(examples['Щ']).toEqual(['щу́ка', 'щё́тка', 'щено́к'])
+  })
+
   it('has three valid game rounds for every letter', () => {
     for (const letter of letters) {
       const words = gameWordsForLetter(letter.uppercase, examples[letter.uppercase])
