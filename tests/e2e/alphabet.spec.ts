@@ -248,7 +248,7 @@ test('shows a clear sound-help message when browser speech is unavailable', asyn
   await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
   await page.locator('.word-list button').first().click()
   await expect(page.locator('.audio-support [role="status"]')).toContainText('Звук не слышно?')
-  await expect(page.getByRole('button', { name: 'Повторить' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Повторить' })).toHaveCount(0)
 })
 
 test('offers sound directions on request when a device is silent', async ({ page }) => {
@@ -256,5 +256,5 @@ test('offers sound directions on request when a device is silent', async ({ page
   await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
   await page.getByRole('button', { name: 'Нет звука?' }).click()
   await expect(page.locator('.audio-support [role="status"]')).toContainText('Увеличьте громкость мультимедиа')
-  await expect(page.getByRole('button', { name: 'Повторить' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Повторить' })).toHaveCount(0)
 })

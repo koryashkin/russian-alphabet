@@ -71,7 +71,6 @@ main { min-height: 100vh; overflow: hidden; }
 .audio-support { display: flex; flex-direction: column; align-items: flex-start; margin-top: 14px; }
 .sound-help-button { padding: 0; background: none; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .error { margin: 9px 0 0; color: #9d4c34; font-size: 12px; line-height: 1.5; }
-.error button { margin-left: 5px; padding: 0; background: none; color: inherit; font-size: inherit; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .lesson-card { display: flex; flex-direction: column; justify-content: center; overflow: hidden; background: #fffaf0; }
 .lesson-card::after { content: ''; position: absolute; right: -85px; bottom: -100px; width: 230px; height: 230px; border-radius: 50%; background: #f1dfb7; opacity: .55; }
 .lesson-number { position: absolute; top: 28px; right: 34px; color: rgba(25,60,51,.07); font: 700 88px/1 var(--font-display); }

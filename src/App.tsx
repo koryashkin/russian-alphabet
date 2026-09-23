@@ -108,8 +108,7 @@ function App() {
             <button className="sound-help-button" onClick={() => setSoundHelp('manual')}>Нет звука?</button>
             {soundHelp && <p className="error" role="status">{soundHelp === 'voice-unavailable'
               ? 'Русский голос недоступен в этом браузере. Проверьте настройки речи устройства.'
-              : 'Звук не слышно? Увеличьте громкость мультимедиа, выключите беззвучный режим или «Не беспокоить», затем повторите.'}
-              <button onClick={() => speak(selectedWord)}>Повторить</button>
+              : 'Звук не слышно? Увеличьте громкость мультимедиа, выключите беззвучный режим или «Не беспокоить».'}
             </p>}
           </div>
         </div>
