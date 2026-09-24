@@ -49,7 +49,7 @@ test('every letter opens a complete card', async ({ page }) => {
     await expect(image).toBeVisible()
     await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement ? element.naturalWidth : 0), { message: `Image for ${letter} must load` }).toBeGreaterThan(0)
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'auto' }))
-    await page.getByRole('button', { name: '← Вся азбука' }).click()
+    await page.locator('.card-view > .back-link').click()
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
   }
 })
@@ -119,7 +119,7 @@ test('opening another letter resets the selected word and picture', async ({ pag
   await page.getByRole('button', { name: /^Открыть букву Я:/ }).click()
   await page.locator('.word-list button').nth(2).click()
   await expect(page.locator('.letter-illustration')).toHaveAttribute('src', /42f-2\.webp$/)
-  await page.getByRole('button', { name: '← Вся азбука' }).click()
+  await page.locator('.card-view > .back-link').click()
   await page.getByRole('button', { name: /^Открыть букву А:/ }).click()
   await expect(page.locator('.letter-illustration')).toHaveAttribute('src', /410-0\.webp$/)
   await expect(page.locator('.word-list button').first()).toHaveAttribute('aria-pressed', 'true')
@@ -144,6 +144,25 @@ test('writing screen accepts a pointer stroke and keeps controls available', asy
   await expect(newSheet).toBeDisabled()
   await expect(page.getByText('Начать на чистом листе?')).toHaveCount(0)
   await expect(page.getByText('Для левой руки')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /Палец|перо/i })).toHaveCount(0)
+})
+
+test('letter navigation keeps the child in the current learning activity', async ({ page }) => {
+  await page.goto('.')
+  await page.getByRole('button', { name: /^Открыть букву Б:/ }).click()
+
+  await page.getByRole('button', { name: 'Следующая буква В' }).click()
+  await expect(page.locator('.big-glyph')).toContainText('В')
+  await page.getByRole('button', { name: 'Предыдущая буква Б' }).click()
+  await expect(page.locator('.big-glyph')).toContainText('Б')
+
+  await page.getByRole('button', { name: /Попробовать рукой/ }).click()
+  await page.getByRole('button', { name: 'Следующая буква В' }).click()
+  await expect(page.getByLabel('Образец написания В')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Следующая буква Г' })).toBeVisible()
+
+  await page.locator('.letter-navigation-all').click()
+  await expect(page.getByRole('heading', { name: 'Выбери букву' })).toBeVisible()
 })
 
 test('show button visibly demonstrates writing stroke by stroke', async ({ page }) => {
@@ -206,8 +225,8 @@ test('all 33 letters have complete, separated writing guides', async ({ page }) 
     expect(boardBox, `${letter}: writing board`).not.toBeNull()
     await page.getByRole('button', { name: 'Показать по шагам' }).click()
     await expect(page.locator('.demo-stroke'), `${letter}: animated strokes`).toHaveCount(guideCount)
-    await page.getByRole('button', { name: `← К букве ${letter}` }).click()
-    await page.getByRole('button', { name: '← Вся азбука' }).click()
+    await page.getByRole('button', { name: `К карточке буквы ${letter}` }).click()
+    await page.locator('.card-view > .back-link').click()
   }
 })
 

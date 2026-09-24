@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronRight, GitBranch, Headphones, Images, PencilLine, Volume2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronRight, GitBranch, Grid3X3, Headphones, Images, PencilLine, Volume2 } from 'lucide-react'
 import { letters, type Letter } from './content/schema'
 import { audio, type SoundIssue } from './services/audio'
 import { WritingPad } from './features/writing/WritingPad'
@@ -12,6 +12,45 @@ import './features/games/games.css'
 type View = 'alphabet' | 'card' | 'write'
 type SoundHelp = SoundIssue | 'manual'
 const vowels = new Set('АЕЁИОУЫЭЮЯ')
+
+function LetterNavigation({
+  current,
+  onSelect,
+  onAllLetters,
+}: {
+  current: Letter
+  onSelect: (letter: Letter) => void
+  onAllLetters: () => void
+}) {
+  const currentIndex = letters.findIndex(letter => letter.id === current.id)
+  const previous = letters[currentIndex - 1]
+  const next = letters[currentIndex + 1]
+
+  return <nav className="letter-navigation" aria-label="Переход между буквами">
+    <button
+      className="letter-navigation-button previous"
+      disabled={!previous}
+      aria-label={previous ? `Предыдущая буква ${previous.uppercase}` : 'Это первая буква'}
+      onClick={() => previous && onSelect(previous)}
+    >
+      <ArrowLeft size={24} aria-hidden="true"/>
+      <span><small>Предыдущая</small><strong>{previous ? `Буква ${previous.uppercase}` : 'Начало азбуки'}</strong></span>
+    </button>
+    <button className="letter-navigation-all" onClick={onAllLetters}>
+      <Grid3X3 size={25} aria-hidden="true"/>
+      <span>Все буквы</span>
+    </button>
+    <button
+      className="letter-navigation-button next"
+      disabled={!next}
+      aria-label={next ? `Следующая буква ${next.uppercase}` : 'Это последняя буква'}
+      onClick={() => next && onSelect(next)}
+    >
+      <span><small>Следующая</small><strong>{next ? `Буква ${next.uppercase}` : 'Конец азбуки'}</strong></span>
+      <ArrowRight size={24} aria-hidden="true"/>
+    </button>
+  </nav>
+}
 
 function App() {
   const [selected, setSelected] = useState<Letter>(letters[0])
@@ -40,12 +79,23 @@ function App() {
     showView('card')
   }
 
+  const continueWithLetter = (letter: Letter, nextView: Extract<View, 'card' | 'write'>) => {
+    setSelected(letter)
+    setSelectedWordIndex(0)
+    setSoundHelp(null)
+    showView(nextView)
+  }
+
   return <main>
     <header className="topbar">
       <button className="brand" onClick={() => showView('alphabet')} aria-label="Открыть всю азбуку">
         <span className="brand-mark" aria-hidden="true">А</span>
         <span className="brand-copy"><strong>Русская азбука</strong><small>слушаем, смотрим, пишем</small></span>
       </button>
+      {view !== 'alphabet' && <button className="topbar-alphabet-button" aria-label="Открыть все буквы" onClick={() => showView('alphabet')}>
+        <Grid3X3 size={22} aria-hidden="true"/>
+        <span>Все буквы</span>
+      </button>}
     </header>
 
     {view === 'alphabet' && <section className="page-shell alphabet-view">
@@ -88,7 +138,7 @@ function App() {
     </section>}
 
     {view === 'card' && <section className="page-shell card-view">
-      <button className="back-link" onClick={() => showView('alphabet')}>← Вся азбука</button>
+      <button className="back-link" onClick={() => showView('alphabet')}><Grid3X3 size={18} aria-hidden="true"/> Все буквы</button>
       <div className="card-layout">
         <div className="letter-card">
           <div className="letter-card-heading">
@@ -125,11 +175,21 @@ function App() {
           </div>
         </div>
       </div>
+      <LetterNavigation
+        current={selected}
+        onSelect={letter => continueWithLetter(letter, 'card')}
+        onAllLetters={() => showView('alphabet')}
+      />
     </section>}
 
     {view === 'write' && <section className="page-shell write-view">
-      <button className="back-link" onClick={() => showView('card')}>← К букве {selected.uppercase}</button>
-      <WritingPad letter={selected.uppercase}/>
+      <button className="back-link" onClick={() => showView('card')}><ArrowLeft size={18} aria-hidden="true"/> К карточке буквы {selected.uppercase}</button>
+      <WritingPad key={selected.uppercase} letter={selected.uppercase}/>
+      <LetterNavigation
+        current={selected}
+        onSelect={letter => continueWithLetter(letter, 'write')}
+        onAllLetters={() => showView('alphabet')}
+      />
     </section>}
 
     <footer className="site-footer">

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
-import { Eraser, Undo2, Play, Pencil, Hand } from 'lucide-react'
+import { Eraser, Undo2, Play } from 'lucide-react'
 import { normalizePoint, strokeOrderMarkers, tracePaths } from './geometry'
 import type { Stroke } from './geometry'
 
@@ -9,7 +9,6 @@ export function WritingPad({ letter }: { letter: string }) {
   const strokes = useRef<Stroke[]>([])
   const active = useRef<number | null>(null)
   const [copy, setCopy] = useState(false)
-  const [pen, setPen] = useState(false)
   const [demo, setDemo] = useState(0)
   const [count, setCount] = useState(0)
   const [limit, setLimit] = useState(false)
@@ -50,7 +49,7 @@ export function WritingPad({ letter }: { letter: string }) {
           {demo > 0 && tracePaths[letter]?.map((path, i) => <path className="demo-stroke" key={`demo-${i}`} d={path} pathLength="1" style={{ animationDelay: `${i * 0.9}s` }} />)}
         </svg>}
         <canvas ref={canvas} aria-label="Поле для рисования" onPointerDown={e => {
-          if (active.current !== null || (pen && e.pointerType !== 'pen') || e.button !== 0) return
+          if (active.current !== null || e.button !== 0) return
           if (strokes.current.length >= 150) { setLimit(true); return }
           active.current = e.pointerId; e.currentTarget.setPointerCapture(e.pointerId)
           strokes.current.push([normalizePoint(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect())]); setCount(strokes.current.length); redraw()
@@ -66,7 +65,6 @@ export function WritingPad({ letter }: { letter: string }) {
         <button onClick={() => { setCopy(false); setDemo(d => d + 1) }}><Play size={21}/>{demo ? 'Показать ещё раз' : 'Показать по шагам'}</button>
         <button disabled={!count} onClick={() => { strokes.current.pop(); setCount(strokes.current.length); setLimit(false); redraw() }}><Undo2 size={21}/>Отменить</button>
         <button disabled={!count} onClick={() => { strokes.current = []; setCount(0); setLimit(false); redraw() }}><Eraser size={21}/>Новый лист</button>
-        <button aria-pressed={pen} onClick={() => setPen(!pen)}>{pen ? <Pencil size={21}/> : <Hand size={21}/>}{pen ? 'Только перо' : 'Палец'}</button>
       </div>
     </div>
     {limit && <p role="status">Лист заполнен. Можно отменить штрих или начать новый лист.</p>}

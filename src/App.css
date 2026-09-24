@@ -19,6 +19,7 @@ main { min-height: 100vh; overflow: hidden; }
 .brand-copy { display: flex; flex-direction: column; line-height: 1.1; }
 .brand-copy strong { font-size: 16px; letter-spacing: -.02em; }
 .brand-copy small { margin-top: 5px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.topbar-alphabet-button { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 9px 15px; border: 1px solid rgba(40,102,80,.2); border-radius: 15px; background: var(--cream); color: var(--green-dark); font-size: 13px; font-weight: 800; box-shadow: 0 3px 0 rgba(25,60,51,.1); }
 .page-shell { width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 46px 0 76px; }
 .site-footer { display: flex; align-items: center; justify-content: center; gap: 9px; width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 24px 0 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 .site-footer a { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
@@ -62,7 +63,7 @@ main { min-height: 100vh; overflow: hidden; }
 .tile-arrow { position: absolute; right: 14px; bottom: 15px; color: var(--green); font-size: 18px; transition: transform .18s ease; }
 .letter-tile:hover .tile-arrow { transform: translateX(3px); }
 
-.back-link { display: inline-flex; align-items: center; margin-bottom: 22px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,250,240,.7); color: var(--muted); font-size: 13px; font-weight: 700; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 10px 15px; border: 1px solid rgba(40,102,80,.18); border-radius: 999px; background: var(--cream); color: var(--green-dark); font-size: 13px; font-weight: 800; }
 .card-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 22px; align-items: stretch; }
 .letter-card, .lesson-card { position: relative; padding: clamp(26px, 4vw, 50px); border: 1px solid rgba(25,60,51,.08); border-radius: 34px; box-shadow: var(--shadow); }
 .letter-card { background: #dfeee8; }
@@ -85,6 +86,16 @@ main { min-height: 100vh; overflow: hidden; }
 .primary:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--green-dark); }
 .full { width: 100%; }
 .text-button { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; margin-top: 19px; background: none; color: var(--muted); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+
+.letter-navigation { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; margin-top: 30px; padding: 12px; border: 1px solid rgba(25,60,51,.1); border-radius: 24px; background: rgba(255,250,240,.8); box-shadow: 0 10px 30px rgba(67,74,56,.08); }
+.letter-navigation button { min-height: 68px; border-radius: 16px; }
+.letter-navigation-button { display: flex; align-items: center; gap: 13px; padding: 10px 17px; background: #dfeee8; color: var(--green-dark); text-align: left; }
+.letter-navigation-button.next { justify-content: flex-end; background: var(--green); color: #fff; text-align: right; }
+.letter-navigation-button span { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.letter-navigation-button small { font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.letter-navigation-button strong { font: 700 20px/1.1 var(--font-display); }
+.letter-navigation-button:disabled { cursor: default; opacity: .38; }
+.letter-navigation-all { display: flex; width: 104px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 8px; background: #f1e4c9; color: var(--green-dark); font-size: 11px; font-weight: 800; }
 
 .write-view { width: min(1240px, calc(100% - 48px)); }
 .writing-section { padding: clamp(26px, 4vw, 48px); border: 1px solid rgba(25,60,51,.08); border-radius: 34px; background: #eee8db; box-shadow: var(--shadow); }
@@ -125,6 +136,7 @@ main { min-height: 100vh; overflow: hidden; }
   .topbar { height: 72px; padding: 0 18px; }
   .brand-mark { width: 39px; height: 39px; font-size: 25px; }
   .brand-copy small { display: none; }
+  .topbar-alphabet-button { min-height: 40px; padding: 8px 11px; }
   .page-shell, .write-view { width: min(100% - 28px, 1240px); padding: 26px 0 52px; }
   .site-footer { flex-wrap: wrap; width: min(100% - 28px, 1240px); padding: 20px 0 28px; text-align: center; }
   .welcome-card { grid-template-columns: 1fr; border-radius: 27px; }
@@ -152,10 +164,23 @@ main { min-height: 100vh; overflow: hidden; }
   .writing-layout { grid-template-columns: 1fr; }
   .writing-board { height: min(105vw, 520px); min-height: 330px; }
   .writing-tools { display: grid; grid-template-columns: 1fr 1fr; }
+  .letter-navigation { grid-template-columns: 1fr 78px 1fr; gap: 7px; margin-top: 20px; padding: 7px; border-radius: 19px; }
+  .letter-navigation button { min-height: 62px; border-radius: 13px; }
+  .letter-navigation-button { gap: 7px; padding: 8px 10px; }
+  .letter-navigation-button strong { font-size: 17px; }
+  .letter-navigation-button small { font-size: 8px; }
+  .letter-navigation-button svg { width: 19px; height: 19px; flex: 0 0 auto; }
+  .letter-navigation-all { width: 78px; font-size: 9px; }
 }
 
 @media (max-width: 390px) {
   .letter-grid { grid-template-columns: repeat(2, 1fr); }
   .feature-row span { padding: 2px 10px; }
   .feature-row span:first-child { padding-left: 0; }
+  .topbar-alphabet-button span { display: none; }
+  .topbar-alphabet-button { width: 40px; justify-content: center; padding: 0; }
+  .letter-navigation { grid-template-columns: 1fr 66px 1fr; }
+  .letter-navigation-all { width: 66px; }
+  .letter-navigation-button { padding: 7px; }
+  .letter-navigation-button strong { font-size: 15px; }
 }
